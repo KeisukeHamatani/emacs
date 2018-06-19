@@ -1,7 +1,7 @@
 ;; ------------------------------------------------------------------------
 ;; @ load-path 
 
-;; load-path¤ÎÄÉ²Ã´Ø¿ô
+;; load-path
 (defun add-to-load-path (&rest paths)
   (let (path)
     (dolist (path paths paths)
@@ -10,8 +10,7 @@
         (if (fboundp 'normal-top-level-add-subdirs-to-load-path)
             (normal-top-level-add-subdirs-to-load-path))))))
 
-;; load-path¤ËÄÉ²Ã¤¹¤ë¥Õ¥©¥ë¥À
-;; 2¤Ä°Ê¾å¥Õ¥©¥ë¥À¤ò»ØÄê¤¹¤ë¾ì¹ç¤Î°ú¿ô => (add-to-load-path "elisp" "xxx" "xxx")
+;; (add-to-load-path "elisp" "xxx" "xxx")
 (add-to-load-path "elisp")
 
 ;; load environment value//
@@ -22,7 +21,7 @@
 ;; ------------------------------------------------------------------------
 ;; @ general
 
-;; 透明度を変更するコマンド M-x set-alpha
+;; M-x set-alpha
 ;; http://qiita.com/marcy@github/items/ba0d018a03381a964f24
 (defun set-alpha (alpha-num)
   "set frame parameter 'alpha"
@@ -51,27 +50,23 @@
                     :foreground "#800"
                     :height 0.9)
 
-(set-frame-parameter (selected-frame) 'alpha '(1.00))
+(set-frame-parameter (selected-frame) 'alpha '(0.88))
 
-;; ¥â¡¼¥É¥é¥¤¥ó¤Ë¹ÔÈÖ¹æÉ½¼¨
 (line-number-mode t)
 
-;; ¥â¡¼¥É¥é¥¤¥ó¤ËÎóÈÖ¹æÉ½¼¨
 (column-number-mode t)
 
-;; ³ç¸Ì¤ÎÈÏ°Ï¿§
 ;;(set-face-background 'show-paren-match-face "#500")
 
-;; ÁªÂòÎÎ°è¤Î¿§
 ;;(set-face-background 'region "#555")
 
-(global-hl-line-mode t);; ¸½ºß¹Ô¤ò¥Ï¥¤¥é¥¤¥È
+(global-hl-line-mode t);;
 (custom-set-faces
 '(hl-line ((t (:background "#f5f5f5")))) ;;
 )
 
-;; ³ç¸Ì¤ÎÈÏ°ÏÆâ¤ò¶¯Ä´É½¼¨
-(show-paren-mode t);; ÂÐ±þ¤¹¤ë³ç¸Ì¤ò¥Ï¥¤¥é¥¤¥È
+;;
+(show-paren-mode t)
 (setq show-paren-delay 0)
 (setq show-paren-style 'expression);; highlight entire bracket expression
 (set-face-attribute 'show-paren-match-face nil
@@ -80,16 +75,16 @@
 
 
 
-;; ¥¿¥Ö¤ò¥¹¥Ú¡¼¥¹¤Ç°·¤¦
+;; 
 (setq-default indent-tabs-mode nil)
 
-;; yes or no¤òy or n
+;; yes or no -> y or n
 (fset 'yes-or-no-p 'y-or-n-p)
 
-;; 1 ¹Ô¤º¤Ä¥¹¥à¡¼¥º¤Ë¥¹¥¯¥í¡¼¥ë¤¹¤ë
+;;
 (setq scroll-step 1)
 
-;; ;; ¥Þ¥¦¥¹¥Û¥¤¡¼¥ë¤Ç¥¹¥¯¥í¡¼¥ë
+;; 
 (defun scroll-down-with-lines ()
   ""
   (interactive)
@@ -100,11 +95,11 @@
   (interactive)
   (scroll-up 2)
   )
-;;¥­¡¼¥Ð¥¤¥ó¥É¤ÏÅ¬µ¹ÊÑ¹¹
+;;
 (global-set-key [wheel-up] 'scroll-down-with-lines)
 (global-set-key [wheel-down] 'scroll-up-with-lines)
 
-;;¥­¡¼¥Ð¥¤¥ó¥É
+;;
 (global-set-key "\C-z" 'undo)
 
 ;(setq-default tab-width 4)
@@ -115,12 +110,11 @@
 (add-hook 'c++-mode-hook 'my-c-c++-mode-init)
 
 ;;window move
-(windmove-default-keybindings 'super) ; Macの人はこちらをオススメ
+(windmove-default-keybindings 'super) ; Mac
 
 ;; ------------------------------------------------------------------------
 ;; @ initial frame maximize
 
-;; µ¯Æ°»þ¤Ë¥¦¥£¥ó¥É¥¦ºÇÂç²½
 ;; http://www.emacswiki.org/emacs/FullScreen#toc12
 (defun jbr-init ()
   "Called from term-setup-hook after the default
@@ -141,50 +135,85 @@
         ((eq ws 'ns)
          ;; for MacBook Air(Late2010) 11inch display
          (set-frame-position (selected-frame) 0 0)
-         (set-frame-size (selected-frame) 95 60))))
+         (set-frame-size (selected-frame) 200 60))))
 
 
-;; MacÍÑ¥Õ¥©¥ó¥ÈÀßÄê
 ;; http://tcnksm.sakura.ne.jp/blog/2012/04/02/emacs/
 
- ;; ±Ñ¸ì
- (set-face-attribute 'default nil
-             :family "Menlo" ;; font
-             :height 120)    ;; font size
+;; font setting
+(set-face-attribute 'default nil
+                    :family "Menlo" ;; font
+                    :height 120)    ;; font size
 
-;; ÆüËÜ¸ì
 (set-fontset-font
  nil 'japanese-jisx0208
 ;; (font-spec :family "Hiragino Mincho Pro")) ;; font
-  (font-spec :family "Hiragino Kaku Gothic ProN")) ;; font
+ (font-spec :family "Hiragino Kaku Gothic ProN")) ;; font
 
-;; È¾³Ñ¤ÈÁ´³Ñ¤ÎÈæ¤ò1:2¤Ë¤·¤¿¤±¤ì¤Ð
 (setq face-font-rescale-alist
 ;;        '((".*Hiragino_Mincho_pro.*" . 1.2)))
-      '((".*Hiragino_Kaku_Gothic_ProN.*" . 1.2)));; MacÍÑ¥Õ¥©¥ó¥ÈÀßÄê
+      '((".*Hiragino_Kaku_Gothic_ProN.*" . 1.2)))
 
-;; 1行ずつスクロール
+;; scroll line to 1
 (setq scroll-conservatively 35
       scroll-margin 0
       scroll-step 1)
 (setq comint-scroll-show-maximum-output t) ;; shell-mode
 
-;; C-Ret で矩形選択
-;; 詳しいキーバインド操作：http://dev.ariel-networks.com/articles/emacs/part5/
+(electric-pair-mode 1) ;;complete parens
+
+;;--------------------------dired---------------------------------
+;;; フォルダを開く時, 新しいバッファを作成しない
+;; バッファを作成したい時にはoやC-u ^を利用する
+(defvar my-dired-before-buffer nil)
+(defadvice dired-advertised-find-file
+  (before kill-dired-buffer activate)
+  (setq my-dired-before-buffer (current-buffer)))
+
+(defadvice dired-advertised-find-file
+  (after kill-dired-buffer-after activate)
+  (if (eq major-mode 'dired-mode)
+      (kill-buffer my-dired-before-buffer)))
+
+(defadvice dired-up-directory
+  (before kill-up-dired-buffer activate)
+  (setq my-dired-before-buffer (current-buffer)))
+
+(defadvice dired-up-directory
+  (after kill-up-dired-buffer-after activate)
+  (if (eq major-mode 'dired-mode)
+      (kill-buffer my-dired-before-buffer)))
+
+;;dired の RET を同じバッファでディレクトリを開くように変更
+(defun dired-open-in-accordance-with-situation ()
+  (interactive)
+  (let ((file (dired-get-filename)))
+    (if (file-directory-p file)
+        (dired-find-alternate-file)
+      (dired-find-file))))
+
+
+;;-------------------------C-Ret-------------------------------
+;; kbd：http://dev.ariel-networks.com/articles/emacs/part5/ 矩形選択の設定
 (cua-mode t)
 (setq cua-enable-cua-keys nil)
-;; ----------------------------------------------------------
 
-;; autocomplete
+;; -----------------------autocomplete-------------------------
 (add-to-list 'exec-path (expand-file-name "~/.emacs.d/elpa/auto-complete-20170124.1845"))
 (require 'auto-complete)
 (require 'auto-complete-config)
 
-;; flycheck
-;;(add-to-list 'exec-path (expand-file-name "~/.emacs.d/elpa/flycheck-20180422.2106"))
-;;(add-hook 'after-init-hook #'global-flycheck-mode)
+;;-------------------------flycheck----------------------------
+(add-to-list 'load-path "~/.emacs.d/elpa/flycheck/flycheck-20180422.2106")
+(add-to-list 'load-path "~/.emacs.d/elpa/flycheck/dash-20180413.30")
+(add-to-list 'load-path "~/.emacs.d/elpa/flycheck/seq-2.20")
 
-;; yasnippet
+(require 'flycheck)
+
+(add-hook 'go-mode-hook 'flycheck-mode)
+(add-hook 'after-init-hook #'global-flycheck-mode)
+
+;;---------------------yasnipetto----------------------------
 (add-to-list 'exec-path (expand-file-name "~/.emacs.d/elpa/yasnippet-20180412.1548"))
 (require 'yasnippet)
 (setq yas-snippet-dirs
@@ -200,30 +229,34 @@
 (require 'tabbar)
 (tabbar-mode 1)
 
-(tabbar-mwheel-mode nil)                  ;; マウスホイール無効
-(setq tabbar-buffer-groups-function nil)  ;; グループ無効
-(setq tabbar-use-images nil)              ;; 画像を使わない
+(tabbar-mwheel-mode nil)                  ;; mouse wheel to nil 
+(setq tabbar-buffer-groups-function nil)  ;; gourp nil
+(setq tabbar-use-images nil)              ;; image nil
 
-
-;;----- キーに割り当てる
+;; kbd for tab changing
 (global-set-key (kbd "<C-tab>") 'tabbar-forward-tab)
 (global-set-key (kbd "<C-S-tab>") 'tabbar-backward-tab)
 (global-set-key (kbd "<M-right>") 'tabbar-forward-tab)
 (global-set-key (kbd "<M-left>") 'tabbar-backward-tab)
 
+;;modeに上書きされないkbd設定、複数設定できない
+;(define-minor-mode overriding-minor-mode
+;  "強制的にM-rightを割り当てる"             ;説明文字列
+;  t                                     ;デフォルトで有効にする
+;  ""                                    ;モードラインに表示しない
+;  `((,(kbd "<M-right>") . tabbar-forwardward-tab)))
 
-;----- 左側のボタンを消す
+;; hide left botton
 (dolist (btn '(tabbar-buffer-home-button
                tabbar-scroll-left-button
                tabbar-scroll-right-button))
  (set btn (cons (cons "" nil)
                  (cons "" nil))))
 
-
-;;----- タブのセパレーターの長さ
+;; length of tab separator
 (setq tabbar-separator '(2.0))
 
-;;----- tab color
+;; tab color
 (set-face-attribute
  'tabbar-default nil;; default
  :background "#E0E0E0"
@@ -257,15 +290,28 @@
                      ((eq (current-buffer) b) b)
                      ((buffer-file-name b) b)
                      ((char-equal ?\  (aref (buffer-name b) 0)) nil)
-		     ((equal "*scratch*" (buffer-name b)) b) ; *scratch*バッファは表示する
-		     ((equal "*shell*" (buffer-name b)) b) ; *shell*バッファは表示する
-		     ((char-equal ?* (aref (buffer-name b) 0)) nil) ; それ以外の * で始まるバッファは表示しない
+		     ((equal "*scratch*" (buffer-name b)) b) 
+                                        ; display *scratch* buffer
+		     ((equal "*shell*" (buffer-name b)) b) 
+                                        ; display *shell* buffer
+		     ((equal "*eshell*" (buffer-name b)) b) 
+                                        ; display *eshell* buffer
+		     ((char-equal ?* (aref (buffer-name b) 0)) nil) 
+                                        ; not display other buffer start with *
                      ((buffer-live-p b) b)))
                 (buffer-list))))
 (setq tabbar-buffer-list-function 'my-tabbar-buffer-list)
 
-;; ----------------------Haskell-----------------------------
+;;-----------------------neotree----------------------------
 
+(add-to-list'load-path "~/.emacs.d/elpa/neotree-20170522.758")
+(require 'neotree)
+(setq neo-show-hidden-files t)
+(setq neo-persist-show t);;not close neotree by delete-other-window
+(setq neo-create-file-auto-open t)
+
+
+;; ----------------------Haskell-----------------------------
 
 (add-to-list 'load-path "~/.emacs.d/elisp/haskell-mode-2.8.0")
 
@@ -276,50 +322,19 @@
 (add-to-list 'auto-mode-alist '("\\.lhs$" . literate-haskell-mode))
 (add-to-list 'auto-mode-alist '("\\.cabal\\'" . haskell-cabal-mode))
 
-(add-to-list 'interpreter-mode-alist '("runghc" . haskell-mode))     ;#!/usr/bin/env runghc ÍÑ
-(add-to-list 'interpreter-mode-alist '("runhaskell" . haskell-mode)) ;#!/usr/bin/env runhaskell ÍÑ
-
-
-;; ----------------------MATLAB------------------------------
-
-(add-to-list 'load-path (expand-file-name "~/.emacs.d/elisp/matlab-emacs-src/")) ;;¥Ñ¥¹ÀßÄê
-(autoload 'matlab-mode "matlab" "Enter Matlab mode." t)
-
-(setq auto-mode-alist (cons '("\\.m$" . matlab-mode) auto-mode-alist))
-(add-hook 'matlab-mode-hook
-         '(lambda ()
-            (set-buffer-file-coding-system 'sjis-dos))) ;;M-¥Õ¥¡¥¤¥ë¤Ï¥·¥Õ¥ÈJIS¤Ç³«¤¯
-
-(setq matlab-shell-command "/Applications/MATLAB_R2016a_Student.app/bin/matlab"  ;;bash¤Ë¥Ñ¥¹ÄÌ¤·¤Æ¤â¾å¼ê¤¯¤¤¤«¤Ê¤«¤Ã¤¿¤Î¤Ç
-	matlab-indent-level 2  ;;¤³¤³¤éÊÕ¤Ï¹¥¤ß¤Ç¤É¤¦¤¾
-	matlab-indent-function-body nil  
-	matlab-highlight-cross-function-variables t
-	matlab-return-add-semicolon t
-	matlab-show-mlint-warnings t 
-	mlint-programs '("/Applications/MATLAB_R2016a_Student.app/bin/maci64/mlint")  
-	matlab-mode-install-path (list (expand-file-name "~/.emacs.d/elisp/matlab/"))
-	)
-		
-(autoload 'mlint-minor-mode "mlint" nil t)  
-(add-hook 'matlab-mode-hook (lambda () (mlint-minor-mode 1)))
-(add-hook 'matlab-shell-mode-hook 'ansi-color-for-comint-mode-on)
-(add-hook 'matlab-shell-mode-hook
-		(lambda () (setenv "LANG" "C")))
-(eval-after-load "shell"  
-	  '(define-key shell-mode-map [down] 'comint-next-matching-input-from-input))
-(eval-after-load "shell"
-	  '(define-key shell-mode-map [up] 'comint-previous-matching-input-from-input))
+(add-to-list 'interpreter-mode-alist '("runghc" . haskell-mode))     ;#!/usr/bin/env runghc 
+(add-to-list 'interpreter-mode-alist '("runhaskell" . haskell-mode)) ;#!/usr/bin/env runhaskell
 
 ;; ---------------------------go----------------------------------
 
 ;; go-mode
 (add-to-list 'load-path "~/.emacs.d/elpa/go-mode-20180327.830")
 
-;; go¤Î¥Ñ¥¹¤òÄÌ¤¹
+;;
 (add-to-list 'exec-path (expand-file-name "/usr/local/bin/go"))
-;; git hub¾å¤Ç¸ø³«¤µ¤ì¤Æ¤¤¤ëgo¤Ëautocompleteµ¡Ç½¤ò¼Â¸½¤¹¤ë°Ù¤Î¥³¥Þ¥ó¥É¥é¥¤¥ó¥Ä¡¼¥ë
+;; 
 (add-to-list 'exec-path (expand-file-name "/Users/hamakei/.go/bin/gocode"))
-;; go get ¤ÇÆþ¤ì¤¿¥Ä¡¼¥ë¤Î¥Ñ¥¹¤òÄÌ¤¹
+;;
 (add-to-list 'exec-path (expand-file-name "/Users/hamakei/dev/go/bin/"))
 
 ;; go-autocomplete
@@ -337,21 +352,17 @@
                     :underline t :foreground "green"
                     :weight 'bold)
 
-
-;flycheck-mode¤òÍ­¸ú²½¤·¤Æ¥·¥ó¥¿¥Ã¥¯¥¹¥¨¥é¡¼¤ò¸¡ÃÎ
-;(add-hook 'go-mode-hook 'flycheck-mode)
-
-; go-mode¤ÈÊä´°µ¡Ç½¤òÀßÄê
+; go-mode
 (autoload 'go-mode "go-mode" nil t)
 (eval-after-load "go-mode" '(progn (require 'go-autocomplete)))
 (add-hook 'go-mode-hook (lambda()
-       (add-hook 'before-save-hook 'gofmt-before-save) ;;ÊÝÂ¸»þ¤Ë¼«Æ°¤Çgo¡¡fmt(go¥³¡¼¥ÉÀ°·Á)
-       (local-set-key (kbd "M-.") 'godef-jump);;ÄêµÁ¥¸¥ã¥ó¥×godef
+       (add-hook 'before-save-hook 'gofmt-before-save) 
+       (local-set-key (kbd "M-.") 'godef-jump)
        (local-set-key (kbd "C-c C-r") 'go-remove-unused-imports)
        (local-set-key (kbd "C-c i") 'go-goto-imports)
        (local-set-key (kbd "C-c d") 'godoc)
-       (setq indent-tabs-mode nil)    ; ¥¿¥Ö¤òÍøÍÑ
-       (setq c-basic-offset 4)    ; tab¥µ¥¤¥º¤ò4¤Ë¤¹¤ë
+       (setq indent-tabs-mode nil)  
+       (setq c-basic-offset 4) 
        (setq tab-width 4)
        (setq gofmt-command "goimports")
        (setq indent-tabs-mode t)))
@@ -365,10 +376,50 @@
 ;; exec-path should include a path to .go/bin.
 ;; So DO NOT launch an emacs from App icon, DO launch an emacs from terminal (shell).
 
-;; go get ¤ÇÆþ¤ì¤¿¥Ä¡¼¥ë·´¤âEmacs¤«¤é»È¤¤¤¿¤¤¤Î¤Ç¡¢ $GOPATH/bin ¤âÄÉ²Ã
+;; files path by go get
 (add-to-list 'exec-path (expand-file-name "~/dev/go-workspace/bin"))
 
-;; homebrew¤ÇÆþ¤ì¤¿¥Ä¡¼¥ë¤òEmacs¤«¤é»È¤¦¤¿¤á¡¢ homebrew¤Îbin¥Ç¥£¥ì¥¯¥È¥ê¤ò exec-path ¤ËÄÉ²Ã
+;; files path by homebrew
 (add-to-list 'exec-path (expand-file-name "~/homebrew/bin"))
-;;¡¡-----------------------------------------------------------------
+
+;; ---------------------------python mode-------------------------------
+
+;;(add-to-list 'load-path "/Users/hamakei/.emacs.d/elpa/python-mode-20180319.344/")
+
+(autoload 'python-mode "python-mode" "Python Mode." t)
+(add-to-list 'auto-mode-alist '("\\.py\\'" . python-mode))
+(add-to-list 'interpreter-mode-alist '("python" . python-mode))
+
+(put 'dired-find-alternate-file 'disabled nil)
+
+
+;; ----------------------------org mode----------------------------------
+
+;; org-modeの初期化
+(require 'org-install)
+;; キーバインドの設定
+(define-key global-map "\C-cl" 'org-store-link)
+(define-key global-map "\C-ca" 'org-agenda)
+(define-key global-map "\C-cr" 'org-remember)
+;; 拡張子がorgのファイルを開いた時，自動的にorg-modeにする
+;;(add-to-list 'auto-mode-alist '("\\.org$" . org-mode))
+;; org-modeでの強調表示を可能にする
+;;(add-hook 'org-mode-hook 'turn-on-font-lock)
+;; 見出しの余分な*を消す
+(setq org-hide-leading-stars t)
+;; org-default-notes-fileのディレクトリ
+(setq org-directory "~/prog/ORG/")
+;; org-default-notes-fileのファイル名
+(setq org-default-notes-file "notes.org")
+;; アジェンダの表示用
+(setq org-agenda-files '("~/prog/ORG/TODO/"))
+
+;;
+;; Disabling key bindings
+;; M-right/left が tabber.el の設定と被ため
+(eval-after-load "org"
+  '(progn
+     (define-key org-mode-map (kbd "<M-right>") nil)
+     (define-key org-mode-map (kbd "<M-left>") nil)
+     ))
 
