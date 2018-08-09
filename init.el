@@ -17,7 +17,26 @@
 (load-file (expand-file-name "~/.emacs.d/shellenv.el"))
 (dolist (path (reverse (split-string (getenv "PATH") ":")))
   (add-to-list 'exec-path path))
-
+;;-------------------------------------------------------------------------
+;; @ フレーム
+  (setq default-frame-alist
+        (append '(
+;;                  (top                  . 28     ) ;; 配置上位置
+;;                  (left                 . 70     ) ;; 配置左位置
+;;                  (width                . 94     ) ;; フレーム幅
+;;                  (height               . 27     ) ;; フレーム高
+;;                  (line-spacing         . 0      ) ;; 文字間隔
+                  (left-fringe          . 1      ) ;; 左フリンジ幅
+                  (right-fringe         . 0      ) ;; 右フリンジ幅
+;;                  (menu-bar-lines       . nil    ) ;; メニューバー
+;;                  (tool-bar-lines       . nil    ) ;; ツールバー
+;;                  (vertical-scroll-bars . nil    ) ;; スクロールバー
+                  (cursor-type          . box    ) ;; カーソル種別
+;;                  (foreground-color     . "white") ;; 文字色
+;;                  (background-color     . "black") ;; 背景色
+;;                  (cursor-color         . "red"  ) ;; カーソル色
+                  ) default-frame-alist) )
+  (setq initial-frame-alist default-frame-alist)
 ;; ------------------------------------------------------------------------
 ;; @ general
 
@@ -43,14 +62,16 @@
 
 (tool-bar-mode -1)
 
-
 (global-linum-mode t)
 
+;;左の行数
 (set-face-attribute 'linum nil
-                    :foreground "#800"
+                    :foreground "#008"
+                    :background "LightSteelBlue1"
                     :height 0.9)
+(setq linum-format "%4d")
 
-(set-frame-parameter (selected-frame) 'alpha '(0.88))
+(set-frame-parameter (selected-frame) 'alpha '(100))
 
 (line-number-mode t)
 
@@ -60,10 +81,11 @@
 
 ;;(set-face-background 'region "#555")
 
-(global-hl-line-mode t);;
-(custom-set-faces
-'(hl-line ((t (:background "#f5f5f5")))) ;;
-)
+;;行のハイライト hi-light line
+;(global-hl-line-mode t);;
+;(custom-set-faces
+;'(hl-line ((t (:background "#fff0f5")))) ;;
+;)
 
 ;;
 (show-paren-mode t)
@@ -71,9 +93,7 @@
 (setq show-paren-style 'expression);; highlight entire bracket expression
 (set-face-attribute 'show-paren-match-face nil
                     :background nil :foreground nil
-                    :underline "#708090" :weight 'extra-bold)
-
-
+                    :underline "#0000ff");; :weight 'extra-bold)
 
 ;; 
 (setq-default indent-tabs-mode nil)
@@ -137,7 +157,6 @@
          (set-frame-position (selected-frame) 0 0)
          (set-frame-size (selected-frame) 200 60))))
 
-
 ;; http://tcnksm.sakura.ne.jp/blog/2012/04/02/emacs/
 
 ;; font setting
@@ -161,6 +180,40 @@
 (setq comint-scroll-show-maximum-output t) ;; shell-mode
 
 (electric-pair-mode 1) ;;complete parens
+
+;;背景色の変更 change background clor
+(custom-set-faces
+ '(default ((t
+             (:background "white" :foreground "black");;fffdfd
+             )));;背景色の変更
+ '(mode-line ((t
+               (:background "CornflowerBlue" :foreground "black");;gray75 black
+               )));;1モードラインの文字, 背景の設定
+ '(mode-line-inactive ((t
+                        (:background "LightBlue3" :foreground "Blue");;gray75 black
+                        )));;1アクティブでないバッファのモードラインの設定
+ '(fringe ((t
+            (:background "LightSteelBlue1" :foreground "red");;gray75 black
+            )));;(フレーム左右の余白部分,行番号との境界)の色
+ )
+
+;; 全角スペースやタブ文字、行末のスペースを色を付けて表示する
+(global-font-lock-mode t)
+(defface my-face-b-1 '((t (:background "gray"))) nil)
+(defface my-face-b-2 '((t (:background "gray26"))) nil)
+(defface my-face-u-1 '((t (:foreground "SteelBlue" :underline t))) nil)
+(defvar my-face-b-1 'my-face-b-1)
+(defvar my-face-b-2 'my-face-b-2)
+(defvar my-face-u-1 'my-face-u-1)
+(defadvice font-lock-mode (before my-font-lock-mode ())
+  (font-lock-add-keywords
+   major-mode 
+   '(("¥t" 0 my-face-b-2 append)
+     ("　" 0 my-face-b-1 append)
+     ("[ ¥t]+$" 0 my-face-u-1 append)
+     )))
+(ad-enable-advice 'font-lock-mode 'before 'my-font-lock-mode)
+(ad-activate 'font-lock-mode)
 
 ;;--------------------------dired---------------------------------
 ;;; フォルダを開く時, 新しいバッファを作成しない
@@ -192,6 +245,58 @@
         (dired-find-alternate-file)
       (dired-find-file))))
 
+;;------------------------PowerLine---------------------------
+(add-to-list 'exec-path (expand-file-name "~/.emacs.d/elpa/powerline-20180322.248"))
+(require 'powerline)
+
+(defun powerline-my-theme ()
+  "Setup the my mode-line."
+  (interactive)
+  (setq powerline-current-separator 'utf-8)
+  (setq-default mode-line-format
+                '("%e"
+                  (:eval
+                   (let* ((active (powerline-selected-window-active))
+                          (mode-line (if active 'mode-line 'mode-line-inactive))
+                          (face1 (if active 'mode-line-1-fg 'mode-line-2-fg))
+                          (face2 (if active 'mode-line-1-arrow 'mode-line-2-arrow))
+                          (separator-left (intern (format "powerline-%s-%s"
+                                                          (powerline-current-separator)
+                                                          (car powerline-default-separator-dir))))
+                          (lhs (list (powerline-raw " " face1)
+                                     (powerline-major-mode face1)
+                                     (powerline-raw " " face1)
+                                     (funcall separator-left face1 face2)
+                                     (powerline-buffer-id nil )
+                                     (powerline-raw " [ ")
+                                     (powerline-raw mode-line-mule-info nil)
+                                     (powerline-raw "%*")
+                                     (powerline-raw " |")
+                                     (powerline-process nil)
+                                     (powerline-vc)
+                                     (powerline-raw " ]")
+                                     ))
+                          (rhs (list (powerline-raw "%4l")
+                                     (powerline-raw ":")
+                                     (powerline-raw "%2c")
+                                     (powerline-raw " | ")
+                                     (powerline-raw "%6p")
+                                     (powerline-raw " ")
+                                     )))
+                     (concat (powerline-render lhs)
+                             (powerline-fill nil (powerline-width rhs))
+                             (powerline-render rhs)))))))
+
+(defun make/set-face (face-name fg-color bg-color weight)
+  (make-face face-name)
+  (set-face-attribute face-name nil
+                      :foreground fg-color :background bg-color :box nil :weight weight))
+(make/set-face 'mode-line-1-fg "#282C34" "#EF8300" 'bold)
+(make/set-face 'mode-line-2-fg "red" "LightSalmon1" 'bold)
+(make/set-face 'mode-line-1-arrow  "black" "CornflowerBlue" 'bold)
+(make/set-face 'mode-line-2-arrow  "black" "CornflowerBlue" 'bold)
+
+(powerline-my-theme)
 
 ;;-------------------------C-Ret-------------------------------
 ;; kbd：http://dev.ariel-networks.com/articles/emacs/part5/ 矩形選択の設定
@@ -229,7 +334,7 @@
 (require 'tabbar)
 (tabbar-mode 1)
 
-(tabbar-mwheel-mode nil)                  ;; mouse wheel to nil 
+(tabbar-mwheel-mode nil)                  ;; mouse wheel to nil
 (setq tabbar-buffer-groups-function nil)  ;; gourp nil
 (setq tabbar-use-images nil)              ;; image nil
 
@@ -246,41 +351,42 @@
 ;  ""                                    ;モードラインに表示しない
 ;  `((,(kbd "<M-right>") . tabbar-forwardward-tab)))
 
-;; hide left botton
+; hide left botton
 (dolist (btn '(tabbar-buffer-home-button
                tabbar-scroll-left-button
                tabbar-scroll-right-button))
- (set btn (cons (cons "" nil)
+(set btn (cons (cons "" nil)
                  (cons "" nil))))
 
-;; length of tab separator
+; length of tab separator
 (setq tabbar-separator '(2.0))
 
 ;; tab color
 (set-face-attribute
  'tabbar-default nil;; default
- :background "#E0E0E0"
- :foreground "#ffffff"
- :height 1.0)
+ :family "Menlo"
+ :background "SteelBlue"
+ :foreground "white"
+ :height 1)
 (set-face-attribute;; sellected
  'tabbar-selected nil
- :background "#ffffff"
- :foreground "#000000"
+ :background "white"
+ :foreground "SteelBlue"
  ;:weight 'bold
  :box nil)
 (set-face-attribute
  'tabbar-modified nil;; modified
- :background "#D0D0D0" 
- :foreground "darkred"  
+ :background "IndianRed"
+ :foreground "white"
  :box nil)
 (set-face-attribute ;; unsellected
  'tabbar-unselected nil
- :background "#D0D0D0"
- :foreground "black"
+ :background "SteelBlue"
+ :foreground "white"
  :box nil)
-;(set-face-attribute
-; 'tabbar-button nil
-; :box nil)
+(set-face-attribute
+ 'tabbar-button nil
+ :box nil)
 
 (defun my-tabbar-buffer-list ()
   (delq nil
@@ -422,4 +528,41 @@
      (define-key org-mode-map (kbd "<M-right>") nil)
      (define-key org-mode-map (kbd "<M-left>") nil)
      ))
+
+;; ---------------------------- helm -----------------------------------
+
+(add-to-list'load-path "~/emacs.d/elpa/helm-20180616.208")
+(add-to-list'load-path "~/emacs.d/elpa/helm-core-20180616.208")
+
+(require 'helm)
+(require 'helm-config)
+;;(require 'helm-migemo)
+(require 'helm-mode)
+
+;; ;;; 既存のコマンドを Helm インターフェイスに置き換える
+(helm-mode 1)
+
+;;(require 'helm-descbinds)
+
+;;; キー設定
+(global-set-key (kbd "C-;") 'helm-for-files)
+(global-set-key (kbd "M-x") 'helm-M-x)
+(global-set-key (kbd "M-y") 'helm-show-kill-ring)
+(define-key helm-map (kbd "C-j") 'helm-maybe-exit-minibuffer)
+(define-key helm-map (kbd "M-j") 'helm-select-3rd-action)
+(define-key helm-map (kbd "C-;") 'anything-keyboard-quit)
+
+;;; 自動補完を無効
+(custom-set-variables '(helm-ff-auto-update-initial-value nil))
+;;; helm-mode で無効にしたいコマンド
+(add-to-list 'helm-completing-read-handlers-alist '(find-file . nil))
+(add-to-list 'helm-completing-read-handlers-alist '(find-file-at-point . nil))
+(add-to-list 'helm-completing-read-handlers-alist '(write-file . nil))
+(add-to-list 'helm-completing-read-handlers-alist '(helm-c-yas-complete . nil))
+(add-to-list 'helm-completing-read-handlers-alist '(dired-do-copy . nil))
+(add-to-list 'helm-completing-read-handlers-alist '(dired-do-rename . nil))
+(add-to-list 'helm-completing-read-handlers-alist '(dired-create-directory . nil))
+
+;;; 一度に表示する最大候補数を増やす
+(setq helm-candidate-number-limit 99999)
 
